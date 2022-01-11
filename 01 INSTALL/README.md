@@ -1,17 +1,17 @@
 # 1.  설치
 
 ## LINUX
-- 서버 컴퓨터 : 이미 설치됨
-- 로컬 컴퓨터
-	- WSL(리눅스용 윈도우 하위 시스템)(https://docs.microsoft.com/ko-kr/windows/wsl/install) :  윈도우에서 가상머신 없이 리눅스를 사용할 수 있습니다
-	- 설치 방법(https://docs.microsoft.com/ko-kr/windows/wsl/install-manual):
-		1. powershell을 관리자 권환으로 연다
-		2. Linux용 Windows 하위 시스템 옵션 활성화 : 
-		dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
-		3. virtual machine 기능 사용 : dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
-		4. https://docs.microsoft.com/ko-kr/windows/wsl/install-manual 의 4단계에서 최신 패키지를 다운로드
-		5. WSL2를 기본 버전으로 설정 : wsl --set-default-version 2
-		6. Microsoft Store에서 원하는 버전의 Linux을 다운 받는다
+### 서버 컴퓨터 : 이미 설치됨
+### 로컬 컴퓨터
+- WSL(리눅스용 윈도우 하위 시스템)(https://docs.microsoft.com/ko-kr/windows/wsl/install) :  윈도우에서 가상머신 없이 리눅스를 사용할 수 있습니다
+- 설치 방법(https://docs.microsoft.com/ko-kr/windows/wsl/install-manual):
+	1. powershell을 관리자 권환으로 연다
+	2. Linux용 Windows 하위 시스템 옵션 활성화 : 
+	dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
+	3. virtual machine 기능 사용 : dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
+	4. https://docs.microsoft.com/ko-kr/windows/wsl/install-manual 의 4단계에서 최신 패키지를 다운로드
+	5. WSL2를 기본 버전으로 설정 : wsl --set-default-version 2
+	6. Microsoft Store에서 원하는 버전의 Linux을 다운 받는다
 
 ## Anaconda
 - https://www.anaconda.com/products/individual 에서 다운로드해서 설치
@@ -37,22 +37,22 @@
 			b) 코드를 실행하기 전에 터미널 창에 nvidia-smi -l 1 을 입력하여 1초마다 nvidia 상태창을 띄워, 실시간으로 GPU 메모리 할당량을 볼 수 있다.
 	- ray[rlib] : ray 강화학습 라이브러리
 ## SUMO
-1. SUMO 설치하기
-	- 윈도우 : https://sumo.dlr.de/docs/Downloads.php 에서 다운로드해서 설치한다
-	- 리눅스
-		1) 저장소에 있는 패키지 업데이트 : sudo add-apt-repository ppa:sumo/stable
-		2) 설치된 패키지들을 최신 버전으로 업데이트 : sudo apt-get update
-		3) sumo 설치 : sudo apt-get install sumo sumo-tools sumo-doc
-2. 환경변수 설정(https://sumo.dlr.de/docs/Basics/Basic_Computer_Skills.html#sumo_home)
-	- 윈도우 : .msi로 설치하면 자동으로 환경변수가 추가됩니다.
-		1) 사용자 환경 변수를 추가합니다
-		2) 변수 이름 : SUMO_HOME
-		3) 변수 값 : sumo 주소
-	- 리눅스 : export 명령어를 사용하여 환경변수에 값을 설정할 수 있습니다. 그런데 재부팅할 때마다 환경 변수 값이 사라지기 때문에 로그인할 매마다 실행되는 .bashrc 파일에 export 명령어을 기입한다
-		1) vi 에디터를 사용 : vi ~/.basrhc
-		2) 편집모드 들어가서 수정 : i를 누르고 export SUMO_HOME="SUMO 위치"
-		3) 명령모드로 들어가서 저장후 강제 종료 저장 : esc를 누르고 :wq! 입력 
-		4) .bashrc 실행 : source ~/.bashrc
+### SUMO 설치하기
+- 윈도우 : https://sumo.dlr.de/docs/Downloads.php 에서 다운로드해서 설치한다
+- 리눅스
+	1) 저장소에 있는 패키지 업데이트 : sudo add-apt-repository ppa:sumo/stable
+	2) 설치된 패키지들을 최신 버전으로 업데이트 : sudo apt-get update
+	3) sumo 설치 : sudo apt-get install sumo sumo-tools sumo-doc
+### 환경변수 설정(https://sumo.dlr.de/docs/Basics/Basic_Computer_Skills.html#sumo_home)
+- 윈도우 : .msi로 설치하면 자동으로 환경변수가 추가됩니다.
+	1) 사용자 환경 변수를 추가합니다
+	2) 변수 이름 : SUMO_HOME
+	3) 변수 값 : sumo 주소
+- 리눅스 : export 명령어를 사용하여 환경변수에 값을 설정할 수 있습니다. 그런데 재부팅할 때마다 환경 변수 값이 사라지기 때문에 로그인할 매마다 실행되는 .bashrc 파일에 export 명령어을 기입한다
+	1) vi 에디터를 사용 : vi ~/.basrhc
+	2) 편집모드 들어가서 수정 : i를 누르고 export SUMO_HOME="SUMO 위치"
+	3) 명령모드로 들어가서 저장후 강제 종료 저장 : esc를 누르고 :wq! 입력 
+	4) .bashrc 실행 : source ~/.bashrc
 ## 원격과 관련된 프로그램
 - Putty(원격 접속 프로그램), Xming(서버의 GUI을 볼 수 있는 프로그램)
 - 혹은 MobaXterm(Xming 필요없음. X Window 내장)
