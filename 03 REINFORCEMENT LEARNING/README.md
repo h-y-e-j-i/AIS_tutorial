@@ -20,7 +20,8 @@ class SumoEnvironment(gym.Env):
     # 설정해야할 attribute
     #   action_space : action의 크기. 
     #   observation_space : observation 크기
-    #   reward_range : reward의 범위 (~
+    #   reward_range : reward의 범위 (이미 [~∞, ∞]로 정의되어 있다. 그래서 값을 설정할 필요가 없다.)
+    
     def __init__(self):
       # 생성자
       self.sim_max_time = 1000
@@ -33,9 +34,8 @@ class SumoEnvironment(gym.Env):
       print(self.lane_IDs)
       print(self.ts_IDs)
 
-      # observation과 action의 크기를 지정
-      # spaces.Box(low=np.zeros(10), high=np.array(['inf']*10)), spaces.Discrete(2), {}) # 1+1+8
-      self.observation_space_len = 1 + len(self.lane_IDs) + len(self.lane_IDs)
+      # observation_space, self.action_space
+      self.observation_space_len = 1 + len(self.lane_IDs) + len(self.lane_IDs)      
       self.observation_space = gym.spaces.Box( low=np.zeros(self.observation_space_len), high=np.array(['inf']*self.observation_space_len))
       self.action_space = gym.spaces.Discrete(4) 
     
@@ -78,6 +78,9 @@ class SumoEnvironment(gym.Env):
       info = {}
 
       return state, reward, done, info
+    def render(self, mode='human'):
+        # 환경을 랜더링한다
+        
     
     # observation 계산 
     def compute_observation(self, action):
