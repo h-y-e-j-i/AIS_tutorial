@@ -1,1 +1,109 @@
+# 강화학습
+## 강화학습 알고리즘
+## 학습환경
+### Single Agent
+``` python
+import os, sys, gym, gym.spaces, numpy as np
+# 'SUMO_HOME' 환경변수 확인
+if 'SUMO_HOME' in os.environ:
+    tools = os.path.join(os.environ['SUMO_HOME'], 'tools')
+    sys.path.append(tools)
+else:
+    sys.exit("Please declare the environment variable 'SUMO_HOME'")
+import traci
 
+# gym.Env를 상속하여 구현한다
+class SumoEnvironment(gym.Env):
+    # 주요 API
+    #   reset, step, render, close, seed
+    #   순서 : init => reset => step => reset => step => ...
+    # 설정해야할 attribute
+    #   action_space : action의 크기. 
+    #   observation_space : observation 크기
+    #   reward_range : reward의 범위 (~
+    def __init__(self):
+      # 생성자
+      self.sim_max_time = 1000
+      sumoInitCmd = ['sumo', '-c', '/home/hyejiserver/hyeji/sumo/cross.sumocfg']
+      traci.start(sumoInitCmd)
+      self.lane_IDs = traci.lane.getIDList()
+      self.ts_IDs = traci.trafficlight.getIDList()
+      traci.close()
+
+      print(self.lane_IDs)
+      print(self.ts_IDs)
+
+      # observation과 action의 크기를 지정
+      # spaces.Box(low=np.zeros(10), high=np.array(['inf']*10)), spaces.Discrete(2), {}) # 1+1+8
+      self.observation_space_len = 1 + len(self.lane_IDs) + len(self.lane_IDs)
+      self.observation_space = gym.spaces.Box( low=np.zeros(self.observation_space_len), high=np.array(['inf']*self.observation_space_len))
+      self.action_space = gym.spaces.Discrete(4) 
+    
+    def reset(self):
+      # 환경 초기화하고 초기 observation을 반환한다      
+      # Returns : 
+      #   observatin : 초기 observation
+      observatin = [0, 0, 0, 0] # 초기 observation
+      return observatin
+
+    def step(self, action):
+      # 환경을 한 단계씩 진행
+      # Args : 
+      #   action : agent가 제공하는 action
+      # Returns :
+      #   observation(object) : 현재 환경의 observation
+      #   reward(float) : 이전 action에 대한 reward
+      #   done(boolean) : 에피소드가 끝났는지, 계속 진행되야 하는지에 대한 결과
+      #   info (dict) : 보조 정보를 포함하고 있다 (디버깅이나 배울 때 유용하다는데... 잘 모르겠다)
+      
+      traci.simulationStep() # sumo 시뮬레이션 진행
+      
+      # action
+      traci.trafficlight.setPhase('0', action) # 신호등 변경
+      
+      # state, reward
+      state = self.compute_observation(action) # observation 계산
+      reward = self.comptue_reward() # reward 계산
+      
+      # done
+      # 시뮬레이션 시간이 정해진 시간을 지나지 않았다면
+      if traci.simulation.getTime() < self.sim_max_time:
+          done = False # 계속 진행
+      else:
+      # 지났다면
+          done = True # 에피소드 종료 => reset()
+          traci.close()
+
+      # info
+      info = {}
+
+      return state, reward, done, info
+    
+    # observation 계산 
+    def compute_observation(self, action):
+      state = []
+      waiting_vehicle_time = 0
+      waiting_vehicle_time_state = []
+      halting_vehicle_number_state = []
+
+      state.append(action)
+
+      for lane_ID in self.lane_IDs:      
+          for veh_ID in traci.lane.getLastStepVehicleIDs(lane_ID):
+              waiting_vehicle_time += traci.vehicle.getWaitingTime(veh_ID)
+          waiting_vehicle_time_state.append(waiting_vehicle_time)
+          halting_vehicle_number_state.append(traci.lane.getLastStepVehicleNumber(lane_ID))
+
+
+
+      state = state+waiting_vehicle_time_state+halting_vehicle_number_state
+      return np.array(state)
+    
+    # reward 계산
+    def comptue_reward(self):
+      sum_waiting_time = 0
+
+      for veh_ID in traci.vehicle.getIDList():
+          sum_waiting_time += traci.vehicle.getWaitingTime(veh_ID)
+      return -sum_waiting_time
+```
