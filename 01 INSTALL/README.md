@@ -25,7 +25,7 @@
 	- tensorflow, CUDA, cuDNN : ray에서 gpu를 인식하려면 먼저 tensorflow가 gpu을 인식하는지를 확인해야한다
 		1. 터미널에 nvidia-smi 명령어를 입력하고 엔터를 누릅니다.
 		2. 밑 사진에서 CUDA version은 설치된 CUDA version이 아닌 추천 버전 입니다.
-			a) 
+			- ![image](https://user-images.githubusercontent.com/58590260/148886509-247cb911-f80a-45be-912e-c50555035e3f.png)
 		3. CUDA version을 확인합니다 : nvcc --version  (https://d33p.tistory.com/16)
 			a) 확인이 안되면 CUDA가 설치되지 않았다는 뜻입니다
 		4. cuDNN verison을 확인합니다 : cat /usr/local/cuda/include/cudnn.h | grep CUDNN_MAJOR -A 2 (https://d33p.tistory.com/16)
