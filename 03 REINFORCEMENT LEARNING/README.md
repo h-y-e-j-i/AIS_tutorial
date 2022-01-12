@@ -35,10 +35,12 @@ class SumoEnvironment(gym.Env):
       print(self.lane_IDs)
       print(self.ts_IDs)
 
-      # observation_space, self.action_space
-      self.observation_space_len = 1 + len(self.lane_IDs) + len(self.lane_IDs)      
+      # observation_space, self.action_space는 gym.spaces을 사용하여 최솟값, 최댓값을 정해준다
+      # observation_space는 최솟값이 0 행렬, 최댓값이 무한대 행렬이다
+      self.observation_space_len = 1 + len(self.lane_IDs) + len(self.lane_IDs) # 행렬의 길이       
       self.observation_space = gym.spaces.Box( low=np.zeros(self.observation_space_len), high=np.array(['inf']*self.observation_space_len))
-      self.action_space = gym.spaces.Discrete(4) 
+      # action_space는 0, 1, 2, 3
+      self.action_space = gym.spaces.Discrete(4) # gym.spaces.Discrete는 고정된 범위 안에서 음이 아닌 숫자들을 허용한 공간이다. 
     
     def reset(self):
       # 환경 초기화하고 초기 observation을 반환한다      
@@ -117,4 +119,20 @@ class SumoEnvironment(gym.Env):
       for veh_ID in traci.vehicle.getIDList():
           sum_waiting_time += traci.vehicle.getWaitingTime(veh_ID)
       return -sum_waiting_time
+```
+
+``` python
+import ray
+from sumoEnv import SumoEnvironment # 강화학습 환경을 가져온다
+from ray.rllib.agents import dqn # 강화학습 알고리즘을 가져온다
+from ray.tune.logger import pretty_print
+
+ray.init() # ray 실행
+
+trainer = dqn.DQNTrainer(env=SumoEnvironment)
+
+# 훈련 시작
+while(True):
+    result = trainer.train()
+    print(pretty_print(result)) # 훈련이 됐을 때마다 결과 출력
 ```
