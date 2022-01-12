@@ -16,6 +16,7 @@ import traci
 class SumoEnvironment(gym.Env):
     # 주요 API
     #   reset, step, render, close, seed
+    #   SUMO 환경에서 강화학습을 구현할 때에는 reset, step 함수만 작성했다.
     #   순서 : init => reset => step => reset => step => ...
     # 설정해야할 attribute
     #   action_space : action의 크기. 
@@ -80,6 +81,13 @@ class SumoEnvironment(gym.Env):
       return state, reward, done, info
     def render(self, mode='human'):
         # 환경을 랜더링한다
+        # SUMO 환경에서 강화학학습 구현할 때에는 사용하지 않았다
+    
+    def close(self):
+        # 프로그램이 종료됐을 때 자동으로 close() 함수에 접근한다
+        
+    def seed(self, seed=None):
+        # 난수 생성기인 시드를 설정한다
         
     
     # observation 계산 
