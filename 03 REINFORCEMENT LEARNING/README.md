@@ -547,3 +547,13 @@ trainer = dqn.DQNTrainer(env="sumoCase03TrainMultiEnv_random", config={
         "lr": 0.0001,
     })
 ```
+
+## 구현해보면 좋을 간단한 환경
+### 가위바위보
+- observation : 컴퓨터가 낸 손 모양
+- action : agent가 낸 손 모양
+- reward : agent가 현재 게임에서 획득한 보상 
+### SUMO(3차선)
+- observation : 대기 차량 대수
+- action : 신호등이 점등할 불  
+- reward : 통과한 차량 
