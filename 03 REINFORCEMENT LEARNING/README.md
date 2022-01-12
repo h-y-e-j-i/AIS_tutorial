@@ -129,10 +129,111 @@ from ray.tune.logger import pretty_print
 
 ray.init() # ray 실행
 
-trainer = dqn.DQNTrainer(env=SumoEnvironment)
+# 강화학습 환경에 필요한 파라미터가 없는 경우에는 env에 환경 클래스 명을 넣어도 된다
+trainer = dqn.DQNTrainer(env=SumoEnvironment) 
 
 # 훈련 시작
 while(True):
     result = trainer.train()
     print(pretty_print(result)) # 훈련이 됐을 때마다 결과 출력
+```
+### Multi Agent
+```python
+import ray, numpy as np
+import tensorflow
+from gym import spaces
+from case03TrainMultiEnv_random import SumoCase03TrainMultiEnvironment as SumoCase03TrainMultiEnvironment_random
+from ray.rllib.agents import dqn
+from ray.tune.logger import pretty_print
+from ray.tune.registry import register_env
+
+
+def policy_mapping(id):
+    return id
+
+OBS_LEN = 25
+ACT_LEN = 4
+
+if __name__ == "__main__":
+    ray.init() # ray를 실행한다
+    
+    # 강화학습 클래스에 파라미터가 필요한 경우 register_env을 사용한다(밑에서 설명)
+    register_env("sumoCase03TrainMultiEnv_random", lambda _:SumoCase03TrainMultiEnvironment_random(
+                                        net_file='/home/sonic/Desktop/nets/case03/intersection.net.xml',
+                                        route_file='/home/sonic/Desktop/nets/case03/intersection_random.rou.xml',
+                                        use_gui=False,
+                                        algorithm="DQN",
+                                        sim_max_time=3600,
+                                        actions_are_logits=False))
+    
+    stop_timesteps = 500000
+    
+    # Multi Agent 환경이므로 Trainer의 설정에서 "multiagent"를 추가하여 설정한다
+    trainer = dqn.DQNTrainer(env="sumoCase03TrainMultiEnv_random", config={
+        "multiagent": {
+            "policies": {  #"policy_graphs" # policy : agent가 어떻게 행동할지 결정한다
+                # 편의상 policy 이름을 agent 이름과 일치시켰다.
+                # 각 policy에 해당하는 agent의 observation 크기와 action 크기를 정한다
+                'gneJ00': (dqn.DQNTFPolicy, spaces.Box(low=np.zeros(OBS_LEN), high=np.array(['inf']*OBS_LEN)), spaces.Discrete(ACT_LEN), {}),
+                'gneJ9': (dqn.DQNTFPolicy, spaces.Box(low=np.zeros(OBS_LEN), high=np.array(['inf']*OBS_LEN)), spaces.Discrete(ACT_LEN), {}), 
+            },            
+            # agent id을 policy id에 매핑한다
+            "policy_mapping_fn": policy_mapping  # Traffic lights are always controlled by this policy
+        },
+        #"timesteps_per_iteration" : stop_timesteps,
+        "lr": 0.0001,
+    })
+    
+    # 훈련
+    iter = 100000000000000
+    for i in range(iter):        
+        result = trainer.train()   
+        print(pretty_print(result))
+```
+## 학습 환경의 파라미터 유무
+### 파라미터가 없는 경우
+```python
+import gym
+
+class SumoEnvironment(gym.Env):
+    def __init__(self):
+        ...
+```
+와 같이 파라미터가 없는 경우
+```python
+# env에 환경 클래스 명만 넣어도 된다
+trainer = dqn.DQNTrainer(env=SumoEnvironment) 
+```
+### 파라미터가 있는 경우
+```python
+class SumoCase03TrainMultiEnvironment(MultiAgentEnv):      
+    def __init__(self, actions_are_logits, use_gui, sim_max_time, net_file, route_file, algorithm):
+        ...
+```
+와 같이 학습 환경에 파라미터가 필요한 경우에는 register env을 사용한다
+```python
+from ray.tune.registry import register_env
+from case03TrainMultiEnv_random import SumoCase03TrainMultiEnvironment as SumoCase03TrainMultiEnvironment_random
+
+# register_env("환경 이름", lambda_: 환경 클래스 이름( 파라미터 설정)
+register_env("sumoCase03TrainMultiEnv_random", lambda _:SumoCase03TrainMultiEnvironment_random(
+                                        net_file='/home/sonic/Desktop/nets/case03/intersection.net.xml',
+                                        route_file='/home/sonic/Desktop/nets/case03/intersection_random.rou.xml',
+                                        use_gui=False,
+                                        algorithm="DQN",
+                                        sim_max_time=3600,
+                                        actions_are_logits=False))
+                                        
+# Sigle Agent와 다르게 env에는 register_env에서 정해준 환경 이름을 넣는다
+trainer = dqn.DQNTrainer(env="sumoCase03TrainMultiEnv_random", config={
+        "multiagent": {
+            "policies": {  #"policy_graphs" 
+                'gneJ00': (dqn.DQNTFPolicy, spaces.Box(low=np.zeros(OBS_LEN), high=np.array(['inf']*OBS_LEN)), spaces.Discrete(ACT_LEN), {}),
+                'gneJ9': (dqn.DQNTFPolicy, spaces.Box(low=np.zeros(OBS_LEN), high=np.array(['inf']*OBS_LEN)), spaces.Discrete(ACT_LEN), {}), 
+            },            
+            "policy_mapping_fn": policy_mapping  # Traffic lights are always controlled by this policy
+        },
+        #"timesteps_per_iteration" : stop_timesteps,
+        "lr": 0.0001,
+    })
 ```
