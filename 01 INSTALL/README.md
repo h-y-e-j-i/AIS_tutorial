@@ -20,7 +20,6 @@
 
 ## Anaconda
 - https://www.anaconda.com/products/individual 에서 다운로드해서 설치
-- 가상환경을 사용하면 패키지 버전별 독립된 환경을 구현할 수 있습니다. 특히 tensorflow gpu가 요구하는 python, CUDA, cuDNN 버전이 다르기때문에 가상환경에서 개발하는 것을 추천드립니다
 - 주로 사용하는 명령어
 	- 가상환경 생성 : conda create -n [가상환경 이름] python='버전'
 	- 가상환경 활성화 : conda activate [가상환경 이름]
@@ -37,7 +36,13 @@
 			- 확인이 안되면 cuDNN이 설치되지 않았다는 뜻입니다
 		5. https://www.tensorflow.org/install/source_windows?hl=ko 에서 tensorflow, CUDA, cuDNN 호환 버전을 확인한다
 		6. tf_detect_gpu.py을 실행하여 기기 목록에 gpu가 뜨는지 확인한다
-		7. 추가로, tensorflow에 gpu가 할당되는지 확인하고 싶다면, tf_simple_use_gpu.py 을 실행해본다.
+		```python				
+		from tensorflow.python.client import device_lib
+		print(device_lib.list_local_devices())
+		```
+		![image](https://user-images.githubusercontent.com/58590260/149270371-a0e66dcd-5869-408a-9b6c-dbc5c26fce41.png)
+		8. 추가로, tensorflow에 gpu가 할당되는지 확인하고 싶다면, tf_simple_use_gpu.py 을 실행해본다.
+
 			- 정상적으로 할당됐다면 GPU:번호 가 출력된다.
 			- 코드를 실행하기 전에 터미널 창에 nvidia-smi -l 1 을 입력하여 1초마다 nvidia 상태창을 띄워, 실시간으로 GPU 메모리 할당량을 볼 수 있다.
 	- ray[rlib] : ray 강화학습 라이브러리
