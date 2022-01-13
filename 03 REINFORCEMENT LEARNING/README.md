@@ -232,8 +232,6 @@ class SumoCase03TrainMultiEnvironment(MultiAgentEnv):
         # 2. action + agent별 각 lane의 차량 대수 + agent별 각 lane의 차량들의 총 waiting time
         self._observation_space_len = 1 + len(self._lane_IDs_by_ts['gneJ00']) + len(self._lane_IDs_by_ts['gneJ00']) 
         # self._observation_space_len = 1 + len(self._lane_IDs_by_ts['gneJ00'])
-        self._observation_space = gym.spaces.Box(low=np.zeros(self._observation_space_len), high=np.array(['inf']*self._observation_space_len))
-        self._action_space = gym.spaces.Discrete(len(self._ts_IDs)) 
        
         print(self._phases_info)
 
