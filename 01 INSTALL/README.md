@@ -40,8 +40,149 @@
 		from tensorflow.python.client import device_lib
 		print(device_lib.list_local_devices())
 		```
-		![image](https://user-images.githubusercontent.com/58590260/149270371-a0e66dcd-5869-408a-9b6c-dbc5c26fce41.png)
-		
+		```
+		[name: "/device:CPU:0"
+		device_type: "CPU"
+		memory_limit: 268435456
+		locality {
+		}
+		incarnation: 2030208924490985173
+		, name: "/device:XLA_CPU:0"
+		device_type: "XLA_CPU"
+		memory_limit: 17179869184
+		locality {
+		}
+		incarnation: 4020259743299958705
+		physical_device_desc: "device: XLA_CPU device"
+		, name: "/device:XLA_GPU:0"
+		device_type: "XLA_GPU"
+		memory_limit: 17179869184
+		locality {
+		}
+		incarnation: 8791009688926143034
+		physical_device_desc: "device: XLA_GPU device"
+		, name: "/device:XLA_GPU:1"
+		device_type: "XLA_GPU"
+		memory_limit: 17179869184
+		locality {
+		}
+		incarnation: 4222075852265083605
+		physical_device_desc: "device: XLA_GPU device"
+		, name: "/device:XLA_GPU:2"
+		device_type: "XLA_GPU"
+		memory_limit: 17179869184
+		locality {
+		}
+		incarnation: 15956990949464556680
+		physical_device_desc: "device: XLA_GPU device"
+		, name: "/device:XLA_GPU:3"
+		device_type: "XLA_GPU"
+		memory_limit: 17179869184
+		locality {
+		}
+		incarnation: 12563524674371285992
+		physical_device_desc: "device: XLA_GPU device"
+		, name: "/device:GPU:0"
+		device_type: "GPU"
+		memory_limit: 10812866560
+		locality {
+		  bus_id: 1
+		  links {
+		    link {
+		      device_id: 1
+		      type: "StreamExecutor"
+		      strength: 1
+		    }
+		    link {
+		      device_id: 2
+		      type: "StreamExecutor"
+		      strength: 1
+		    }
+		    link {
+		      device_id: 3
+		      type: "StreamExecutor"
+		      strength: 1
+		    }
+		  }
+		}
+		incarnation: 328272042398892835
+		physical_device_desc: "device: 0, name: NVIDIA TITAN Xp, pci bus id: 0000:3b:00.0, compute capability: 6.1"
+		, name: "/device:GPU:1"
+		device_type: "GPU"
+		memory_limit: 11484332032
+		locality {
+		  bus_id: 1
+		  links {
+		    link {
+		      type: "StreamExecutor"
+		      strength: 1
+		    }
+		    link {
+		      device_id: 2
+		      type: "StreamExecutor"
+		      strength: 1
+		    }
+		    link {
+		      device_id: 3
+		      type: "StreamExecutor"
+		      strength: 1
+		    }
+		  }
+		}
+		incarnation: 16895035820671706321
+		physical_device_desc: "device: 1, name: NVIDIA TITAN Xp, pci bus id: 0000:5e:00.0, compute capability: 6.1"
+		, name: "/device:GPU:2"
+		device_type: "GPU"
+		memory_limit: 11484332032
+		locality {
+		  bus_id: 2
+		  numa_node: 1
+		  links {
+		    link {
+		      type: "StreamExecutor"
+		      strength: 1
+		    }
+		    link {
+		      device_id: 1
+		      type: "StreamExecutor"
+		      strength: 1
+		    }
+		    link {
+		      device_id: 3
+		      type: "StreamExecutor"
+		      strength: 1
+		    }
+		  }
+		}
+		incarnation: 10400602806917446111
+		physical_device_desc: "device: 2, name: NVIDIA TITAN Xp, pci bus id: 0000:b1:00.0, compute capability: 6.1"
+		, name: "/device:GPU:3"
+		device_type: "GPU"
+		memory_limit: 11484332032
+		locality {
+		  bus_id: 2
+		  numa_node: 1
+		  links {
+		    link {
+		      type: "StreamExecutor"
+		      strength: 1
+		    }
+		    link {
+		      device_id: 1
+		      type: "StreamExecutor"
+		      strength: 1
+		    }
+		    link {
+		      device_id: 2
+		      type: "StreamExecutor"
+		      strength: 1
+		    }
+		  }
+		}
+		incarnation: 15937186228273924522
+		physical_device_desc: "device: 3, name: NVIDIA TITAN Xp, pci bus id: 0000:d9:00.0, compute capability: 6.1"
+		]
+		```
 		8. 추가로, tensorflow에 gpu가 할당되는지 확인하고 싶다면, tf_simple_use_gpu.py 을 실행해본다.
 		```python
 		import tensorflow as tf
@@ -64,7 +205,33 @@
 		print("\n" * 2)
 		```		
 		- 정상적으로 할당됐다면 GPU:번호 가 출력된다.
-			- ![image](https://user-images.githubusercontent.com/58590260/149271476-3056a80c-834e-4e0d-b78e-2576e14a5cbf.png)
+		```
+		random_uniform/RandomUniform: (RandomUniform): /job:localhost/replica:0/task:0/device:GPU:1
+		2022-01-13 15:30:57.321580: I tensorflow/core/common_runtime/placer.cc:54] random_uniform/RandomUniform: (RandomUniform): /job:localhost/replica:0/task:0/device:GPU:1
+		random_uniform/sub: (Sub): /job:localhost/replica:0/task:0/device:GPU:1
+		2022-01-13 15:30:57.321608: I tensorflow/core/common_runtime/placer.cc:54] random_uniform/sub: (Sub): /job:localhost/replica:0/task:0/device:GPU:1
+		random_uniform/mul: (Mul): /job:localhost/replica:0/task:0/device:GPU:1
+		2022-01-13 15:30:57.321624: I tensorflow/core/common_runtime/placer.cc:54] random_uniform/mul: (Mul): /job:localhost/replica:0/task:0/device:GPU:1
+		random_uniform: (Add): /job:localhost/replica:0/task:0/device:GPU:1
+		2022-01-13 15:30:57.321639: I tensorflow/core/common_runtime/placer.cc:54] random_uniform: (Add): /job:localhost/replica:0/task:0/device:GPU:1
+		transpose: (Transpose): /job:localhost/replica:0/task:0/device:GPU:1
+		2022-01-13 15:30:57.321655: I tensorflow/core/common_runtime/placer.cc:54] transpose: (Transpose): /job:localhost/replica:0/task:0/device:GPU:1
+		MatMul: (MatMul): /job:localhost/replica:0/task:0/device:GPU:1
+		2022-01-13 15:30:57.321669: I tensorflow/core/common_runtime/placer.cc:54] MatMul: (MatMul): /job:localhost/replica:0/task:0/device:GPU:1
+		Sum: (Sum): /job:localhost/replica:0/task:0/device:GPU:1
+		2022-01-13 15:30:57.321684: I tensorflow/core/common_runtime/placer.cc:54] Sum: (Sum): /job:localhost/replica:0/task:0/device:GPU:1
+		random_uniform/shape: (Const): /job:localhost/replica:0/task:0/device:GPU:1
+		2022-01-13 15:30:57.321699: I tensorflow/core/common_runtime/placer.cc:54] random_uniform/shape: (Const): /job:localhost/replica:0/task:0/device:GPU:1
+		random_uniform/min: (Const): /job:localhost/replica:0/task:0/device:GPU:1
+		2022-01-13 15:30:57.321714: I tensorflow/core/common_runtime/placer.cc:54] random_uniform/min: (Const): /job:localhost/replica:0/task:0/device:GPU:1
+		random_uniform/max: (Const): /job:localhost/replica:0/task:0/device:GPU:1
+		2022-01-13 15:30:57.321729: I tensorflow/core/common_runtime/placer.cc:54] random_uniform/max: (Const): /job:localhost/replica:0/task:0/device:GPU:1
+		transpose/perm: (Const): /job:localhost/replica:0/task:0/device:GPU:1
+		2022-01-13 15:30:57.321743: I tensorflow/core/common_runtime/placer.cc:54] transpose/perm: (Const): /job:localhost/replica:0/task:0/device:GPU:1
+		Const: (Const): /job:localhost/replica:0/task:0/device:GPU:1
+		2022-01-13 15:30:57.321757: I tensorflow/core/common_runtime/placer.cc:54] Const: (Const): /job:localhost/replica:0/task:0/device:GPU:1
+		2022-01-13 15:30:57.333032: I tensorflow/stream_executor/platform/default/dso_loader.cc:44] Successfully opened dynamic library libcublas.so.10.0
+		```
 		- 코드를 실행하기 전에 터미널 창에 nvidia-smi -l 1 을 입력하여 1초마다 nvidia 상태창을 띄워, 실시간으로 GPU 메모리 할당량을 볼 수 있다.
 			- ![image](https://user-images.githubusercontent.com/58590260/149271888-2b6b259f-7d94-4ccc-877d-09842fd96249.png)
 	- ray[rlib] : ray 강화학습 라이브러리
