@@ -105,3 +105,12 @@ rllib rollout \
    ```
    rllib rollout  /home/sonic/ray_results/DQN_sumoIcheonTrainMultiEnv_random_2021-10-07_16-57-19b27d0vuk/checkpoint_000601/checkpoint-601 --env "Icheon_random_gcl" --run DQN
    ```
+## 텐서보드
+```
+tensorboard --logdir=~/ray_results --host localhost
+```
+혹은
+```
+tensorboard --logdir=checkpoint_path --host localhost
+```
+![image](https://user-images.githubusercontent.com/58590260/149296655-8c05bc7b-244e-4bdf-8c62-8b9df3fa5207.png)
