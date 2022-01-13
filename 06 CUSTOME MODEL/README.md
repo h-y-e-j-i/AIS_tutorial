@@ -74,3 +74,10 @@ policy_grpah = trainer.get_policy(policy_id).get_session().graph
 with tensorflow.compat.v1.Graph().as_default():
 writer = tensorflow.compat.v1.summary.FileWriter()
 ```
+```
+tensorboard --logdir=pa --host localhost
+
+```
+
+![image](https://user-images.githubusercontent.com/58590260/149295945-2ad2681f-9f66-434c-90df-9b296daed2fc.png)
+
