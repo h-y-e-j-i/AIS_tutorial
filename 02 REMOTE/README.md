@@ -60,8 +60,20 @@
 5. 터미널 창에 display 환경 변수를 확인합니다 : echo $DISPLAY
   - dispaly 환경 변수가 정의되지 않았거나 재정의 할 때 : export DISPLAY=클라이언트ip:display number
     - 예 : export DISPLAY=172.xxx.xxx.xxx:0
-6. 사용자가 정의한 환경변수는 클라이언트에서 접속이 끊길 때 사라지므로
-  - https://github.com/microsoft/vscode-remote-release/issues/267
+6. 윈도우라면 Xming을 실행하고, xclock 명령어를 입력하여 시계가 표시되는지 확인한다
+  - 만약 표시되지 않는다면 DISPLAY 환경변수를 바꿔본다(가끔 이상하다;;)
+  - 예) export DISPLAY=클라이언트 ip:10.0, export DISPLAY=localhost:10.0, export DISPLAY=localhost:0.0 등등
+7. 사용자가 정의한 환경변수는 클라이언트에서 접속이 끊길 때 사라지므로 설정파일을 수정한다 
+  ![image](https://user-images.githubusercontent.com/58590260/149275012-6617b2f2-4a72-4ad4-b49c-441a54ed9cb7.png)
+    1. 왼쪽 아래 톱니바퀴를 클릭하고 Settings을 클릭한다.
+    2. 검색창에 linux을 검색한다
+    3. Terminal > Intergrated > Env:Linux 항목에 Edit in settings.json을 클릭한다
+    4. 중괄호 안에 아래 내용을 추가한다
+    ```json
+    "terminal.integrated.env.linux": {
+        "DISPLAY" : "클라이언트 ip 혹은 localhost:display number"
+    },
+    ```
 ## 개인적으로 사용하는 방법!
 - ray dashboard나 tensorboard을 파이어폭스에 주소를 입력해서 접속하는데, putty에서 파이어폭스 접속하면 생각보다 많이 느리다. 그래서 비교적 빠른 원격 데스크톱 연결을 통해 파이어폭스에 접속하여 ray dashboard와 tensorboard를 본다.
 - VS CODE는 코드 실행하는 용으로 두고, 추가적인 터미널이 필요할 때에는 putty을 통해 원격 . putty는 여러 창 띄울 수 있다.
