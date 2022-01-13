@@ -41,10 +41,32 @@
 		print(device_lib.list_local_devices())
 		```
 		![image](https://user-images.githubusercontent.com/58590260/149270371-a0e66dcd-5869-408a-9b6c-dbc5c26fce41.png)
+		
 		8. 추가로, tensorflow에 gpu가 할당되는지 확인하고 싶다면, tf_simple_use_gpu.py 을 실행해본다.
+		```python
+		import tensorflow as tf
+		from datetime import datetime
 
-			- 정상적으로 할당됐다면 GPU:번호 가 출력된다.
-			- 코드를 실행하기 전에 터미널 창에 nvidia-smi -l 1 을 입력하여 1초마다 nvidia 상태창을 띄워, 실시간으로 GPU 메모리 할당량을 볼 수 있다.
+		shape=(int(10000),int(10000))
+
+		with tf.device("/gpu:1"): # 텐서를 1번 gpu에 할당
+		    random_matrix = tf.random_uniform(shape=shape, minval=0, maxval=1)
+		    dot_operation = tf.matmul(random_matrix, tf.transpose(random_matrix))
+		    sum_operation = tf.reduce_sum(dot_operation)
+
+		startTime = datetime.now()
+		with tf.Session(config=tf.ConfigProto(log_device_placement=True)) as session:
+			result = session.run(sum_operation)
+			print(result)
+
+		print("\n" * 2)
+		print("Time taken:", datetime.now() - startTime)
+		print("\n" * 2)
+		```		
+		- 정상적으로 할당됐다면 GPU:번호 가 출력된다.
+			- ![image](https://user-images.githubusercontent.com/58590260/149271476-3056a80c-834e-4e0d-b78e-2576e14a5cbf.png)
+		- 코드를 실행하기 전에 터미널 창에 nvidia-smi -l 1 을 입력하여 1초마다 nvidia 상태창을 띄워, 실시간으로 GPU 메모리 할당량을 볼 수 있다.
+			- ![image](https://user-images.githubusercontent.com/58590260/149271888-2b6b259f-7d94-4ccc-877d-09842fd96249.png)
 	- ray[rlib] : ray 강화학습 라이브러리
 	- python
 ## SUMO
