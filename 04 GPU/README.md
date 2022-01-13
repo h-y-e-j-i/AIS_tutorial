@@ -1,6 +1,6 @@
 # 04 GPU 사용하기
 ## GPU 인식
-- ray에서 GPU을 인식하고 있는지 아래 코드를 통해 확인한다
+- ray에서 GPU을 인식하고 있는지 ray_gpu_detect_test.py 통해 확인한다
 ```python
 import ray, os
 @ray.remote(num_gpus=4)
