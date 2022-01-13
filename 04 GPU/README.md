@@ -19,7 +19,7 @@ use_gpu.remote()
 
 - 기본적으로, ray.remote 데코레이터는 함수에 사용한다.
 - 클래스에 ray.remote 데코레이터를 사용하면 액터라고 부른다.
-- ray.remote를 사용하는 방법은 다음과 같다
+- ray.remote를 사용하는 방법은 다음과 같다 (ray_remote_test.py)
 ```python
 import ray
 
