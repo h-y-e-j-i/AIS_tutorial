@@ -1,5 +1,11 @@
 # 모델 저장하기 & 불러오기
 ## 모델 저장하기
+``` python
+result = trainer.train()        
+check_point_path = trainer.save()            
+print("checkpoint saved at", check_point_path) # 저장 경로 출력
+```
+
 ## 불러오기
 - checkpoint를 불러오는 방법은 다음과 같다
 ```
