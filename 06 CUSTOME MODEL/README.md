@@ -67,6 +67,79 @@ Trainable params: 66,820
 Non-trainable params: 0
 __________________________________________________________________________________________________
 ```
+## 모델 커스텀 하기
+- https://docs.ray.io/en/latest/rllib-models.html#custom-action-distributions
+- Tensorflow, PyTorch 둘 다 자세히 다뤄본 적이 없어 적용만 해보고 그 외에는 해보지 못했다
+- 
+### Tensorflow
+``` python
+
+import ray
+import ray.rllib.agents.ppo as ppo
+from ray.rllib.models import ModelCatalog
+from ray.rllib.models.tf.tf_modelv2 import TFModelV2
+
+class MyModelClass(TFModelV2):
+    def __init__(self, *args, **kwargs):
+    super(MyModelClass, self).__init__(*args, **kwargs)
+    input_layer = tf.keras.layers.Input(...)
+    hidden_layer = tf.keras.layers.Dense(...)(input_layer)
+    output_layer = tf.keras.layers.Dense(...)(hidden_layer)
+    value_layer = tf.keras.layers.Dense(...)(hidden_layer)
+    self.base_model = tf.keras.Model(
+        input_layer, [output_layer, value_layer])
+        
+    def forward(self, input_dict, state, seq_lens):
+      model_out, self._value_out = self.base_model(
+      input_dict["obs"])
+      return model_out, state
+
+ModelCatalog.register_custom_model("my_tf_model", MyModelClass)
+
+ray.init()
+trainer = ppo.PPOTrainer(env="CartPole-v0", config={
+    "model": {
+        "custom_model": "my_tf_model",
+        # Extra kwargs to be passed to your model's c'tor.
+        "custom_model_config": {},
+    },
+})
+```
+### PyTorch
+``` python
+import torch.nn as nn
+
+import ray
+from ray.rllib.agents import ppo
+from ray.rllib.models import ModelCatalog
+from ray.rllib.models.torch.torch_modelv2 import TorchModelV2
+
+class CustomTorchModel(TorchModelV2):
+    def __init__(self, *args, **kwargs):
+      TorchModelV2.__init__(self, *args, **kwargs)
+      nn.Module.__init__(self)
+      self._hidden_layers = nn.Sequential(...)
+      self._logits = ...
+      self._value_branch = ...
+      
+    def forward(self, input_dict, state, seq_lens):
+        model_out, self._value_out = self.base_model(input_dict["obs"])
+        return model_out, state
+        
+    def value_function(self): ...
+
+ModelCatalog.register_custom_model("my_torch_model", CustomTorchModel)
+
+ray.init()
+trainer = ppo.PPOTrainer(env="CartPole-v0", config={
+    "framework": "torch",
+    "model": {
+        "custom_model": "my_torch_model",
+        # Extra kwargs to be passed to your model's c'tor.
+        "custom_model_config": {},
+    },
+})
+```
 ## 모델 그래프 저장하기
 ```python
 result = trainer.train()    
