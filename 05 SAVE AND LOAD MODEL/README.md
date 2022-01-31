@@ -11,7 +11,8 @@ rllib rollout \
 - 훈련한 모델 이름의 폴더로 이동한 후, 불러오고 싶은 checkpoint 폴더에 들어간다
 - pwd 명령어를 이용해 현재 위치를 복사하고 불러올 checkpoint 이름(checkpoint-숫자)를 그 뒤에 붙인 파일 경로를 가지고 있는다
   - 예) /home/sonic/ray_results/MADDPG_sumoMultiEnv_2021-09-10_16-59-34n7gahahx/checkpoint_000094/checkpoint-94
-- 만약, ray에 내장된 환경이라면 환경 이름을 적으면 되고, 사용자가 만든 환경이라면  /home/sonic/anaconda3/envs/tf_rl/lib/python3.7/site-packages/ray/rllib/rollout.py 파일 안에 from ~ import와 register_env를 사용하여 똑같이 사용자 환경을 만들어 준다. 그런데 서로 다른 폴더에 있는 코드다보니 from~import 사용이 조금 까다로워서 그냥  /home/sonic/anaconda3/envs/tf_rl/lib/python3.7/site-packages/ray/rllib 폴더 밑에 학습 환경 코드를 복사하고 register_env를 사용하여 사용자 환경을 등록했다
+- 만약, ray에 내장된 환경이라면 환경 이름을 적으면 되고, 사용자가 만든 환경이라면  /home/sonic/anaconda3/envs/tf_rl/lib/python3.7/site-packages/ray/rllib/rollout.py 파일 안에 from ~ import와 register_env를 사용하여 똑같이 사용자 환경을 만들어 준다.
+- 그런데 서로 다른 폴더에 있는 코드다보니 from~import 사용이 조금 까다로워서 그냥  /home/sonic/anaconda3/envs/tf_rl/lib/python3.7/site-packages/ray/rllib 폴더 밑에 학습 환경 코드를 복사하고 register_env를 사용하여 사용자 환경을 등록했다
   - ![image](https://user-images.githubusercontent.com/58590260/149289941-55a5090c-a90f-448f-addf-888bd61128f4.png)
   ```python
   #!/usr/bin/env python
@@ -106,6 +107,7 @@ rllib rollout \
    rllib rollout  /home/sonic/ray_results/DQN_sumoIcheonTrainMultiEnv_random_2021-10-07_16-57-19b27d0vuk/checkpoint_000601/checkpoint-601 --env "Icheon_random_gcl" --run DQN
    ```
 ## 텐서보드
+- 터미널 창에 텐서보드 명령어를 입력한다
 ```
 tensorboard --logdir=~/ray_results --host localhost
 ```
@@ -113,4 +115,5 @@ tensorboard --logdir=~/ray_results --host localhost
 ```
 tensorboard --logdir=checkpoint_path --host localhost
 ```
+- putty나 원격 데스크톱 연결을 통해 접속해 터미널에 firfox라고 입력하여 파이어폭스를 켜 접속한다. 
 ![image](https://user-images.githubusercontent.com/58590260/149296655-8c05bc7b-244e-4bdf-8c62-8b9df3fa5207.png)
