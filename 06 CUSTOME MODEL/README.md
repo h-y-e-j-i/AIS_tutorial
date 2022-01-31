@@ -6,7 +6,7 @@ model = trainer3.get_policy().model
 # policy id가 있다면
 # model = trainer3.get_policy(policy id).model 
 model.base_model.summary() # Access the base Keras models
-model.state_value_head.summary() Access the Q value model (specific to DQN)
+model.state_value_head.summary() # Access the Q value model (specific to DQN)
 model.q_value_head.summary() # Access the state value model (specific to DQN)
 ```
 ```
@@ -74,10 +74,11 @@ policy_grpah = trainer.get_policy(policy_id).get_session().graph
 with tensorflow.compat.v1.Graph().as_default():
 writer = tensorflow.compat.v1.summary.FileWriter()
 ```
+## 모델 그래프 확인하기
+- 텐서보드에서 확인할 수 있다
+- 그래프의 내용이 복잡한데, 아직 각각의 노드들의 의미와 연산을 이해하지 못했다.
 ```
-tensorboard --logdir=pa --host localhost
-
+tensorboard --logdir=path --host localhost
 ```
-
 ![image](https://user-images.githubusercontent.com/58590260/149295945-2ad2681f-9f66-434c-90df-9b296daed2fc.png)
 
